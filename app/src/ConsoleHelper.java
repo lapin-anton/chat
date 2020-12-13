@@ -1,4 +1,5 @@
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
 
 public class ConsoleHelper {
@@ -9,10 +10,24 @@ public class ConsoleHelper {
     }
 
     public static String readString() {
-        return null;
+        String line;
+        try {
+            line = reader.readLine();
+        } catch (IOException e) {
+            System.out.println("Произошла ошибка при попытке ввода текста. Попробуйте еще раз.");
+            line = readString();
+        }
+        return line;
     }
 
     public static int readInt() {
-        return 0;
+        int number;
+        try {
+            number = Integer.parseInt(readString());
+        } catch (NumberFormatException e) {
+            System.out.println("Произошла ошибка при попытке ввода числа. Попробуйте еще раз.");
+            number = readInt();
+        }
+        return number;
     }
 }

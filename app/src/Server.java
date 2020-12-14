@@ -53,19 +53,48 @@ public class Server {
         }
 
         private String serverHandshake(Connection connection) throws IOException, ClassNotFoundException {
-            return null;
+            Message m;
+            do {
+                connection.send(new Message(MessageType.NAME_REQUEST));
+                m = connection.receive();
+            } while (!m.getType().equals(MessageType.USER_NAME) ||
+                    m.getData().equals("") || connectionMap.containsKey(m.getData()));
+            connectionMap.put(m.getData(), connection);
+            connection.send(new Message(MessageType.NAME_ACCEPTED));
+            return m.getData();
         }
 
         private void notifyUsers(Connection connection, String userName) throws IOException {
-
+            for(Map.Entry<String, Connection> pair: connectionMap.entrySet()) {
+                if (pair.getKey().equals(userName)) continue;
+                Message message = new Message(MessageType.USER_ADDED, pair.getKey());
+                connection.send(message);
+            }
         }
 
         private void serverMainLoop(Connection connection, String userName) throws IOException, ClassNotFoundException {
-
+            while (true) {
+                String formatted = null;
+                Message message = connection.receive();
+                if(message.getType() == MessageType.TEXT) {
+                    formatted = String.format("%s: %s", userName, message.getData());
+                    message = new Message(MessageType.TEXT, formatted);
+                    sendBroadcastMessage(message);
+                } else {
+                    ConsoleHelper.writeMessage("Ошибка отправки сообщения");
+                }
+            }
         }
     }
 
     public static void sendBroadcastMessage(Message message) {
-
+        for (Map.Entry<String, Connection> pair: connectionMap.entrySet()) {
+            Connection c = pair.getValue();
+            try {
+                c.send(message);
+            } catch (IOException e) {
+                System.out.println("Сообщение не отправлено.");
+            }
+        }
     }
 }

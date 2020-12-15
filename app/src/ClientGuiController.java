@@ -23,6 +23,27 @@ public class ClientGuiController extends Client {
     }
 
     private class GuiSocketThread extends SocketThread {
+        @Override
+        protected void processIncomingMessage(String message) {
+            model.setNewMessage(message);
+            view.refreshMessages();
+        }
 
+        @Override
+        protected void informAboutAddingNewUser(String userName) {
+            model.addUser(userName);
+            view.refreshUsers();
+        }
+
+        @Override
+        protected void informAboutDeletingNewUser(String userName) {
+            model.deleteUser(userName);
+            view.refreshUsers();
+        }
+
+        @Override
+        protected void notifyConnectionStatusChanged(boolean clientConnected) {
+            view.notifyConnectionStatusChanged(clientConnected);
+        }
     }
 }

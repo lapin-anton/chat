@@ -22,6 +22,21 @@ public class ClientGuiController extends Client {
         return model;
     }
 
+    @Override
+    protected String getServerAddress() {
+        return view.getServerAddress();
+    }
+
+    @Override
+    protected int getServerPort() {
+        return view.getServerPort();
+    }
+
+    @Override
+    protected String getUserName() {
+        return view.getUserName();
+    }
+
     private class GuiSocketThread extends SocketThread {
         @Override
         protected void processIncomingMessage(String message) {
@@ -46,4 +61,6 @@ public class ClientGuiController extends Client {
             view.notifyConnectionStatusChanged(clientConnected);
         }
     }
+
+
 }

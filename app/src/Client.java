@@ -112,17 +112,17 @@ public class Client {
         }
     }
 
-    private String getServerAddress() {
+    protected String getServerAddress() {
         ConsoleHelper.writeMessage("Введите ip сервера:");
         return ConsoleHelper.readString();
     }
 
-    private int getServerPort() {
+    protected int getServerPort() {
         ConsoleHelper.writeMessage("Введите порт сервера:");
         return ConsoleHelper.readInt();
     }
 
-    private String getUserName() {
+    protected String getUserName() {
         ConsoleHelper.writeMessage("Введите Ваш никнейм:");
         return ConsoleHelper.readString();
     }

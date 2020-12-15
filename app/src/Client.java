@@ -3,7 +3,7 @@ import java.net.Socket;
 
 public class Client {
 
-    private Connection connection;
+    protected Connection connection;
     private volatile boolean clientConnected = false;
 
 
@@ -113,15 +113,18 @@ public class Client {
     }
 
     private String getServerAddress() {
-        return null;
+        ConsoleHelper.writeMessage("Введите ip сервера:");
+        return ConsoleHelper.readString();
     }
 
     private int getServerPort() {
-        return 0;
+        ConsoleHelper.writeMessage("Введите порт сервера:");
+        return ConsoleHelper.readInt();
     }
 
     private String getUserName() {
-        return null;
+        ConsoleHelper.writeMessage("Введите Ваш никнейм:");
+        return ConsoleHelper.readString();
     }
 
     private SocketThread getSocketThread() {

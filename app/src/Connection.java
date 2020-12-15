@@ -3,6 +3,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
+import java.net.SocketAddress;
 
 public class Connection implements Closeable {
 
@@ -12,8 +13,8 @@ public class Connection implements Closeable {
 
     public Connection(Socket socket) throws IOException {
         this.socket = socket;
-        this.in = new ObjectInputStream(socket.getInputStream());
         this.out = new ObjectOutputStream(socket.getOutputStream());
+        this.in = new ObjectInputStream(socket.getInputStream());
     }
 
     public void send(Message message) throws IOException {
@@ -23,7 +24,7 @@ public class Connection implements Closeable {
     }
 
     public Message receive() throws IOException, ClassNotFoundException {
-        Message m = null;
+        Message m;
         synchronized (in) {
             m = (Message) in.readObject();
         }
@@ -32,8 +33,12 @@ public class Connection implements Closeable {
 
     @Override
     public void close() throws IOException {
-        this.socket.close();
-        this.out.close();
-        this.in.close();
+        socket.close();
+        in.close();
+        out.close();
+    }
+
+    public SocketAddress getRemoteSocketAddress() {
+        return socket.getRemoteSocketAddress();
     }
 }

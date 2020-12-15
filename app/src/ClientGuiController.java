@@ -1,6 +1,6 @@
 public class ClientGuiController extends Client {
     private ClientGuiModel model = new ClientGuiModel();
-    private ClientGuiView view = new ClientGuiView();
+    private ClientGuiView view = new ClientGuiView(this);
 
     public static void main(String[] args) {
         ClientGuiController controller = new ClientGuiController();
@@ -16,6 +16,10 @@ public class ClientGuiController extends Client {
     @Override
     protected SocketThread getSocketThread() {
         return new GuiSocketThread();
+    }
+
+    public ClientGuiModel getModel() {
+        return model;
     }
 
     private class GuiSocketThread extends SocketThread {

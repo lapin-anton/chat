@@ -7,9 +7,19 @@ public class ClientGuiView {
     private final ClientGuiController controller;
 
     private JFrame frame = new JFrame("Чат");
+    private JPanel southPane = new JPanel();
     private JTextField textField = new JTextField(50);
     private JTextArea messages = new JTextArea(10, 50);
     private JTextArea users = new JTextArea(10, 10);
+    private JButton send = new JButton("Отправить");
+
+    static {
+        try {
+            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
     public ClientGuiView(ClientGuiController controller) {
         this.controller = controller;
@@ -20,20 +30,17 @@ public class ClientGuiView {
         textField.setEditable(false);
         messages.setEditable(false);
         users.setEditable(false);
-
-        frame.getContentPane().add(textField, BorderLayout.NORTH);
-        frame.getContentPane().add(new JScrollPane(messages), BorderLayout.WEST);
+        frame.getContentPane().add(new JScrollPane(messages), BorderLayout.CENTER);
         frame.getContentPane().add(new JScrollPane(users), BorderLayout.EAST);
+        southPane.add(textField, BorderLayout.WEST);
+        southPane.add(send, BorderLayout.EAST);
+        frame.getContentPane().add(southPane, BorderLayout.SOUTH);
         frame.pack();
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setVisible(true);
 
-        textField.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                controller.sendTextMessage(textField.getText());
-                textField.setText("");
-            }
-        });
+        textField.addActionListener(new SendAction());
+        send.addActionListener(new SendAction());
     }
 
     public String getServerAddress() {
@@ -100,5 +107,13 @@ public class ClientGuiView {
             sb.append(userName).append("\n");
         }
         users.setText(sb.toString());
+    }
+
+    class SendAction implements ActionListener {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            controller.sendTextMessage(textField.getText());
+            textField.setText("");
+        }
     }
 }

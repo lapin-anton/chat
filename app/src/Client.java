@@ -59,7 +59,7 @@ public class Client {
             }
         }
 
-        private void clientHandshake() throws IOException, ClassNotFoundException {
+        protected void clientHandshake() throws IOException, ClassNotFoundException {
             while (true) {
                 Message message = connection.receive();
                 if(message.getType() == null) throw new IOException("Unexpected MessageType");
@@ -74,7 +74,7 @@ public class Client {
             }
         }
 
-        private void clientMainLoop() throws IOException, ClassNotFoundException {
+        protected void clientMainLoop() throws IOException, ClassNotFoundException {
             while(true) {
                 Message message = connection.receive();
                 if(message.getType() == null) {
@@ -92,22 +92,22 @@ public class Client {
             }
         }
 
-        private void notifyConnectionStatusChanged(boolean clientConnected) {
+        protected void notifyConnectionStatusChanged(boolean clientConnected) {
             Client.this.clientConnected = clientConnected;
             synchronized (Client.this) {
                 Client.this.notify();
             }
         }
 
-        private void processIncomingMessage(String message) {
+        protected void processIncomingMessage(String message) {
             ConsoleHelper.writeMessage(message);
         }
 
-        private void informAboutAddingNewUser(String userName) {
+        protected void informAboutAddingNewUser(String userName) {
             ConsoleHelper.writeMessage(String.format("%s присоединился к чату.", userName));
         }
 
-        private void informAboutDeletingNewUser(String userName) {
+        protected void informAboutDeletingNewUser(String userName) {
             ConsoleHelper.writeMessage(String.format("%s покинул чат.", userName));
         }
     }
@@ -127,7 +127,7 @@ public class Client {
         return ConsoleHelper.readString();
     }
 
-    private SocketThread getSocketThread() {
+    protected SocketThread getSocketThread() {
         return new SocketThread();
     }
 
@@ -135,7 +135,7 @@ public class Client {
         return true;
     }
 
-    private void sendTextMessage(String text) {
+    protected void sendTextMessage(String text) {
         try {
             Message message = new Message(MessageType.TEXT, text);
             connection.send(message);
